@@ -28,6 +28,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import com.chaquo.python.PyObject
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
 import com.example.microglucometer.methods.ImageConversion
 import com.example.microglucometer.models.UploadImage
 import com.example.microglucometer.models.User
@@ -67,6 +70,11 @@ fun UploadImageBody(
 ) {
     val context = LocalContext.current
 
+    if (!Python.isStarted())
+        Python.start(AndroidPlatform(context))
+
+    val python: Python = Python.getInstance()
+
     var isCameraSelected = false
 
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -75,14 +83,27 @@ fun UploadImageBody(
 
         btm?.let { it ->
 
-            val byteArray = ImageConversion().convertBitmapToByteArrays(it)
+            val originalImageByteArray = ImageConversion().convertBitmapToByteArrays(it)
+
+            val originalImageString = ImageConversion().getStringImage(it)
+
+            val pyObject: PyObject = python.getModule("region_of_interest_script")
+
+            val convertedImageString = pyObject.callAttr("main", originalImageString).toString()
+
+            val convertedImageBitmap = ImageConversion().getBitmapImage(convertedImageString)
+
+            val regionOfInterestImageByteArray = ImageConversion().convertBitmapToByteArrays(convertedImageBitmap)
 
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     navigator.navigate(
                         RegionOfInterestScreenDestination(
                             user,
-                            uploadImage = UploadImage(byteArray),
+                            uploadImage = UploadImage(
+                                originalImageByteArray,
+                                regionOfInterestImageByteArray,
+                            ),
                         ),
                     )
                 },
@@ -108,14 +129,27 @@ fun UploadImageBody(
             }
 
             bitmap?.let { btm ->
-                val byteArray = ImageConversion().convertBitmapToByteArrays(btm)
+                val originalImageByteArray = ImageConversion().convertBitmapToByteArrays(btm)
+
+                val originalImageString = ImageConversion().getStringImage(btm)
+
+                val pyObject: PyObject = python.getModule("region_of_interest_script")
+
+                val convertedImageString = pyObject.callAttr("main", originalImageString).toString()
+
+                val convertedImageBitmap = ImageConversion().getBitmapImage(convertedImageString)
+
+                val regionOfInterestImageByteArray = ImageConversion().convertBitmapToByteArrays(convertedImageBitmap)
 
                 Handler(Looper.getMainLooper()).postDelayed(
                     {
                         navigator.navigate(
                             RegionOfInterestScreenDestination(
                                 user,
-                                uploadImage = UploadImage(byteArray),
+                                uploadImage = UploadImage(
+                                    originalImageByteArray,
+                                    regionOfInterestImageByteArray,
+                                ),
                             ),
                         )
                     },

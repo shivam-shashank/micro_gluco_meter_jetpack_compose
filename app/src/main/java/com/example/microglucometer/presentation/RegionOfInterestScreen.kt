@@ -71,7 +71,7 @@ fun RegionOfInterestBody(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            uploadImage.byteArray.let {
+            uploadImage.originalImageByteArray.let {
 
                 val bitmap = ImageConversion().convertByteArraysToBitmap(it)
 
@@ -93,7 +93,7 @@ fun RegionOfInterestBody(
                 textDecoration = TextDecoration.Underline,
             )
 
-            uploadImage.byteArray.let {
+            uploadImage.regionOfInterestImageByteArray.let {
 
                 val bitmap = ImageConversion().convertByteArraysToBitmap(it)
 

@@ -164,7 +164,7 @@ fun ReportScreenBody(
                 keyboardActions = KeyboardActions()
             )
 
-            uploadImage.byteArray.let {
+            uploadImage.regionOfInterestImageByteArray.let {
 
                 val bitmap = ImageConversion().convertByteArraysToBitmap(it)
 

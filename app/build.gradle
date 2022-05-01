@@ -47,6 +47,12 @@ android {
             pyc {
                 src false
             }
+            pip {
+                install "opencv-contrib-python-headless"
+                install "pillow"
+                install "numpy"
+                install "scikit-image"
+            }
         }
     }
 

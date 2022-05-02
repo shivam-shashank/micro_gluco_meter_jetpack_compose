@@ -43,7 +43,8 @@ def main(data):
     cleaned_conc = np.stack([eroded, eroded, eroded], 2)
 
     roi = cv2.bitwise_and(temp6, cleaned_conc)
-
+    roi = roi[:,:,::-1]
+    
     # img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     pil_im = Image.fromarray(roi)
 

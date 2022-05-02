@@ -44,7 +44,8 @@ def main(data):
 
     roi = cv2.bitwise_and(temp6, cleaned_conc)
 
-    # img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    roi = roi[:, :, ::-1]
+
     pil_im = Image.fromarray(roi)
 
     buff = io.BytesIO()

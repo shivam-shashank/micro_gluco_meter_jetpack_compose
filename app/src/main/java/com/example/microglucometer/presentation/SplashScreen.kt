@@ -26,7 +26,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
 
-@Destination
+@Destination(start = true)
 @Composable
 fun SplashScreen(navigator: DestinationsNavigator) {
     val scale = remember {

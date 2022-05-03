@@ -2,6 +2,8 @@ package com.example.microglucometer.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -74,7 +76,8 @@ fun RegionOfInterestBody(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 16.dp),
+            .padding(vertical = 16.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -128,24 +131,27 @@ fun RegionOfInterestBody(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        
+
         Button(
             onClick = {
-                val regionOfInterestImageBitmap = ImageConversion().convertByteArraysToBitmap(uploadImage.regionOfInterestImageByteArray)
+                val regionOfInterestImageBitmap =
+                    ImageConversion().convertByteArraysToBitmap(uploadImage.regionOfInterestImageByteArray)
 
-                val regionOfInterestImageString = ImageConversion().getStringImage(regionOfInterestImageBitmap)
+                val regionOfInterestImageString =
+                    ImageConversion().getStringImage(regionOfInterestImageBitmap)
 
                 val pyObject: PyObject = python.getModule("feature_extraction_script")
 
-                val featureExtractionValues = pyObject.callAttr("main", regionOfInterestImageString).toString()
+                val featureExtractionValues =
+                    pyObject.callAttr("main", regionOfInterestImageString).toString()
 
                 // [10] -> 10 - string manipulation
-                if(featureExtractionValues.length > 3){
+                if (featureExtractionValues.length > 3) {
                     user.concentration = featureExtractionValues.substring(
                         1,
                         featureExtractionValues.indexOf(']', ignoreCase = true),
                     ) + " mM "
-                }else{
+                } else {
                     user.concentration = "N/A"
                 }
 
@@ -154,7 +160,7 @@ fun RegionOfInterestBody(
                         user,
                         uploadImage,
                     ),
-                ){
+                ) {
                     popUpTo(RegistrationScreenDestination.route) { inclusive = true }
                 }
             },

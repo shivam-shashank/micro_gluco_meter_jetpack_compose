@@ -79,7 +79,7 @@ fun RecordsScreenBody() {
                         modifier = Modifier.padding(16.dp),
                     ) {
                         DetailRow(label = "Name : ", value = userDetail.name)
-                        DetailRow(label = "Gender : ", value = userDetail.age)
+                        DetailRow(label = "Gender : ", value = userDetail.gender)
                         DetailRow(label = "Age : ", value = userDetail.age)
                         DetailRow(label = "Phone Number : ", value = userDetail.phoneNumber)
                         DetailRow(label = "Concentration : ", value = userDetail.concentration)

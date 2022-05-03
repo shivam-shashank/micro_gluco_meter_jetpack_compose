@@ -1,6 +1,5 @@
 package com.example.microglucometer.presentation
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -138,20 +137,26 @@ fun RegionOfInterestBody(
 
                 val pyObject: PyObject = python.getModule("feature_extraction_script")
 
-                val featureExtractionValues = pyObject.callAttr("main", regionOfInterestImageString)
+                val featureExtractionValues = pyObject.callAttr("main", regionOfInterestImageString).toString()
 
-                Log.e("asd", featureExtractionValues.toString())
+                // [10] -> 10 - string manipulation
+                if(featureExtractionValues.length > 3){
+                    user.concentration = featureExtractionValues.substring(
+                        1,
+                        featureExtractionValues.indexOf(']', ignoreCase = true),
+                    ) + " mM "
+                }else{
+                    user.concentration = "N/A"
+                }
 
-                user.concentration = featureExtractionValues.toString()
-
-//                navigator.navigate(
-//                    ReportScreenDestination(
-//                        user,
-//                        uploadImage,
-//                    ),
-//                ){
-//                    popUpTo(RegistrationScreenDestination.route) { inclusive = true }
-//                }
+                navigator.navigate(
+                    ReportScreenDestination(
+                        user,
+                        uploadImage,
+                    ),
+                ){
+                    popUpTo(RegistrationScreenDestination.route) { inclusive = true }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth(0.9f)

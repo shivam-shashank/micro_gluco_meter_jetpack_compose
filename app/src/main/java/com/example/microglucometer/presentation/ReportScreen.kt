@@ -148,7 +148,7 @@ fun ReportScreenBody(
             CustomOutlinedTextField(
                 value = user.concentration,
                 onValueChange = { },
-                label = "Concentration",
+                label = "Concentration (milliMolar)",
                 readOnly = true,
                 leadingIconImageVector = Icons.Filled.Water,
                 leadingIconContentDescription = "Concentration Icon",

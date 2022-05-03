@@ -79,12 +79,12 @@ fun RegistrationForm(navigator: DestinationsNavigator) {
     val validatePhoneNumberError = "Phone Number must be of 10 digits"
 
     fun validateData(name: String, age: String, phoneNumber: String): Boolean {
-//        validateName = name.isNotBlank()
+        validateName = name.isNotBlank()
 
-//        validateAge = if (age.isBlank()) false
-//        else age.toInt() in 1..99
+        validateAge = if (age.isBlank()) false
+        else age.toInt() in 1..99
 
-//        validatePhoneNumber = phoneNumber.length == 10
+        validatePhoneNumber = phoneNumber.length == 10
 
         return validateName && validateAge && validatePhoneNumber
     }

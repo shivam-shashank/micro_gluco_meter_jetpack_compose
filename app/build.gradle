@@ -52,6 +52,8 @@ android {
                 install "pillow"
                 install "numpy"
                 install "scikit-image"
+                install "pickle-mixin"
+                install "scikit-learn"
             }
         }
     }

@@ -232,6 +232,7 @@ fun RegistrationForm(navigator: DestinationsNavigator) {
                                           age,
                                           gender,
                                           phoneNumber,
+                                          "",
                                       ),
                                   ),
                               )

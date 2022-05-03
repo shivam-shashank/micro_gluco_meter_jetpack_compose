@@ -1,5 +1,6 @@
 package com.example.microglucometer.presentation
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,9 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chaquo.python.PyObject
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
 import com.example.microglucometer.methods.ImageConversion
 import com.example.microglucometer.models.UploadImage
 import com.example.microglucometer.models.User
@@ -60,6 +65,12 @@ fun RegionOfInterestBody(
     user: User,
     uploadImage: UploadImage,
 ) {
+    val context = LocalContext.current
+
+    if (!Python.isStarted())
+        Python.start(AndroidPlatform(context))
+
+    val python: Python = Python.getInstance()
 
     Column(
         modifier = Modifier
@@ -87,7 +98,7 @@ fun RegionOfInterestBody(
             }
 
             Text(
-                modifier = Modifier.padding(vertical = 12.dp),
+                modifier = Modifier.padding(vertical = 8.dp),
                 text = "Original Image",
                 fontSize = 24.sp,
                 textDecoration = TextDecoration.Underline,
@@ -109,7 +120,7 @@ fun RegionOfInterestBody(
             }
 
             Text(
-                modifier = Modifier.padding(vertical = 12.dp),
+                modifier = Modifier.padding(vertical = 8.dp),
                 text = "Region Of Interest",
                 fontSize = 24.sp,
                 textDecoration = TextDecoration.Underline,
@@ -121,14 +132,26 @@ fun RegionOfInterestBody(
         
         Button(
             onClick = {
-                navigator.navigate(
-                    ReportScreenDestination(
-                        user,
-                        uploadImage,
-                    ),
-                ){
-                    popUpTo(RegistrationScreenDestination.route) { inclusive = true }
-                }
+                val regionOfInterestImageBitmap = ImageConversion().convertByteArraysToBitmap(uploadImage.regionOfInterestImageByteArray)
+
+                val regionOfInterestImageString = ImageConversion().getStringImage(regionOfInterestImageBitmap)
+
+                val pyObject: PyObject = python.getModule("feature_extraction_script")
+
+                val featureExtractionValues = pyObject.callAttr("main", regionOfInterestImageString)
+
+                Log.e("asd", featureExtractionValues.toString())
+
+                user.concentration = featureExtractionValues.toString()
+
+//                navigator.navigate(
+//                    ReportScreenDestination(
+//                        user,
+//                        uploadImage,
+//                    ),
+//                ){
+//                    popUpTo(RegistrationScreenDestination.route) { inclusive = true }
+//                }
             },
             modifier = Modifier
                 .fillMaxWidth(0.9f)

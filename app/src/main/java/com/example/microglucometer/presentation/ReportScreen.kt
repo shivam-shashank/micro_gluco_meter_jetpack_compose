@@ -67,12 +67,6 @@ fun ReportScreenBody(
 ) {
     val context = LocalContext.current
 
-    val name by rememberSaveable { mutableStateOf(user.name) }
-    val gender by rememberSaveable { mutableStateOf(user.gender) }
-    val age by rememberSaveable { mutableStateOf(user.age) }
-    val phoneNumber by rememberSaveable { mutableStateOf(user.phoneNumber) }
-    val concentration by rememberSaveable { mutableStateOf("") }
-
     LaunchedEffect(user.name) {
         val mUserDetailViewModel = UserDetailViewModel(context.applicationContext as Application)
 
@@ -83,7 +77,7 @@ fun ReportScreenBody(
                 user.gender,
                 user.age,
                 user.phoneNumber,
-                concentration,
+                user.concentration,
             ),
         )
     }
@@ -91,7 +85,7 @@ fun ReportScreenBody(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 12.dp),
+            .padding(top = 12.dp),
         horizontalAlignment = CenterHorizontally,
     ) {
 
@@ -100,7 +94,7 @@ fun ReportScreenBody(
         ) {
 
             CustomOutlinedTextField(
-                value = name,
+                value = user.name,
                 onValueChange = { },
                 label = "Name",
                 readOnly = true,
@@ -113,11 +107,11 @@ fun ReportScreenBody(
             )
 
             CustomOutlinedTextField(
-                value = gender,
+                value = user.gender,
                 onValueChange = { },
                 label = "Gender",
                 readOnly = true,
-                leadingIconImageVector = if (gender == "Male") Icons.Filled.Male else Icons.Filled.Female,
+                leadingIconImageVector = if (user.gender == "Male") Icons.Filled.Male else Icons.Filled.Female,
                 leadingIconContentDescription = "Gender Icon",
                 showError = false,
                 errorMessage = "",
@@ -126,7 +120,7 @@ fun ReportScreenBody(
             )
 
             CustomOutlinedTextField(
-                value = age,
+                value = user.age,
                 onValueChange = { },
                 label = "Age",
                 readOnly = true,
@@ -139,7 +133,7 @@ fun ReportScreenBody(
             )
 
             CustomOutlinedTextField(
-                value = phoneNumber,
+                value = user.phoneNumber,
                 onValueChange = { },
                 label = "Phone Number",
                 readOnly = true,
@@ -152,7 +146,7 @@ fun ReportScreenBody(
             )
 
             CustomOutlinedTextField(
-                value = concentration,
+                value = user.concentration,
                 onValueChange = { },
                 label = "Concentration",
                 readOnly = true,
@@ -180,7 +174,7 @@ fun ReportScreenBody(
             }
 
             Text(
-                modifier = Modifier.padding(vertical = 12.dp),
+                modifier = Modifier.padding(vertical = 8.dp),
                 text = "Region Of Interest",
                 fontSize = 24.sp,
                 textDecoration = TextDecoration.Underline,
